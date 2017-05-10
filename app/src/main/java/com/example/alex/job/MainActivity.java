@@ -1,14 +1,20 @@
 package com.example.alex.job;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.alex.activity.ActivityLifecycle;
+
+public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,70 +27,58 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecycleView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(new String[]{
-                "Text 1",
-                "Text 2",
-                "Text 3",
-                "Text 4",
-                "Text 5",
-                "Text 6",
-                "Text 7",
-                "Text 8",
-                "Text 9",
-                "Text 10",
-                "Text 1",
-                "Text 2",
-                "Text 3",
-                "Text 4",
-                "Text 5",
-                "Text 6",
-                "Text 7",
-                "Text 8",
-                "Text 9",
-                "Text 10",
-                "Text 1",
-                "Text 2",
-                "Text 3",
-                "Text 4",
-                "Text 5",
-                "Text 6",
-                "Text 7",
-                "Text 8",
-                "Text 9",
-                "Text 10",
-                "Text 1",
-                "Text 2",
-                "Text 3",
-                "Text 4",
-                "Text 5",
-                "Text 6",
-                "Text 7",
-                "Text 8",
-                "Text 9",
-                "Text 10",
-                "Text 1",
-                "Text 2",
-                "Text 3",
-                "Text 4",
-                "Text 5",
-                "Text 6",
-                "Text 7",
-                "Text 8",
-                "Text 9",
-                "Text 10"
-        });
+        mAdapter = new MyAdapter(topicList);
+        mAdapter.setOnItemClickListener(this);
         mRecycleView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onClicked(int position) {
+        if (position < topicActivity.length) {
+            Intent intent = new Intent(this, topicActivity[position]);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "没有指定要启动的Activity #" + position, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private RecyclerView mRecycleView;
-    private RecyclerView.Adapter mAdapter;
+    private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private final static String TAG = MainActivity.class.getName();
+
+    private String[] topicList = new String[]{
+            "Activity Lifecycle Test",
+            "Text 2",
+            "Text 3",
+            "Text 4",
+            "Text 5",
+            "Text 6",
+            "Text 7",
+            "Text 8",
+            "Text 9",
+            "Text 10"
+    };
+
+    private Class[] topicActivity = new Class[] {
+            ActivityLifecycle.class,
+    };
 }
 
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onClicked(int position);
+    }
+
     public MyAdapter(String[] data) {
         mData = data;
+    }
+
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -94,8 +88,18 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.textView.setText(mData[position]);
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (null != listener) {
+                    listener.onClicked(position);
+                }
+                Log.d(TAG, "onClick #" + position);
+            }
+        });
     }
 
     @Override
@@ -115,4 +119,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     private String[] mData;
+    private OnItemClickListener listener;
+
+    private final static String TAG = MyAdapter.class.getName();
 }
