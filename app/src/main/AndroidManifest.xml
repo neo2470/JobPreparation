@@ -17,6 +17,7 @@
         </activity>
 
         <activity android:name="com.example.alex.activity.ActivityLifecycle"/>
+        <activity android:name="com.example.alex.activity.ActivityLifecycle2"/>
     </application>
 
 </manifest>

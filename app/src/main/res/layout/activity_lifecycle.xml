@@ -11,4 +11,12 @@
         android:text="TextView"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         tools:text="Activity A" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:onClick="onClick"
+        android:text="Start Another Activity" />
 </LinearLayout>
