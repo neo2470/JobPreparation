@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.alex.job.R;
+
 /**
  * Created by alex on 11/5/2017.
  */
@@ -14,13 +16,19 @@ public class ActivityLifecycle2 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lifecycle2);
         Log.d(TAG, "onCreate()");
+
+        if (null != savedInstanceState) {
+            Log.d(TAG, "Activity is created again with data = " + savedInstanceState.getString("data"));
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(TAG, "onRestoreInstanceState()");
+        Log.d(TAG, "Activity is created again restore data = " + savedInstanceState.getString("data"));
     }
 
     @Override
@@ -57,6 +65,8 @@ public class ActivityLifecycle2 extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState()");
+
+        outState.putString("data", "this is a test when activity is terminated");
     }
 
     @Override
